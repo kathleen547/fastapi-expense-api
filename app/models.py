@@ -2,7 +2,7 @@ from sqlalchemy.sql import func
 from sqlalchemy import Column, Integer, String, Float, Date, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
-from database import Base
+from app.database import Base
 
 class Category(Base):
     __tablename__= "category"
