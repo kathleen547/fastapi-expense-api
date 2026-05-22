@@ -2,15 +2,8 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.database import SessionLocal, Base, engine
 from app import models
+from app.routers import categories
 
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 def create_db_and_tables():
@@ -25,3 +18,4 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app.include_router(categories.router)
