@@ -43,3 +43,39 @@ def delete_category(db: Session, category_id: int):
     db.delete(category)
     db.commit()
     return category
+
+
+def create_expense(db: Session, expense: schemas.ExpenseCreate):
+    db_expense = models.Expense(
+        title=expense.title,
+        amount=expense.amount,
+        date=expense.date,
+        category_id=expense.category_id,
+        notes=expense.notes
+    )
+    db.add(db_expense)
+    db.commit()
+    db.refresh(db_expense)
+    return db_expense
+
+
+def get_expenses(db: Session, skip: int = 0, limit: int = 10,
+                   category_id: int | None = None):
+    query = db.query(models.Expense)
+    if category_id:
+        query = query.filter(category_id == models.Expense.category_id)
+    return query.offset(skip).limit(limit).all()
+
+
+def get_expense(db: Session, expense_id: int):
+    return db.query(models.Expense).filter(expense_id == models.Expense.id).first()
+
+
+def delete_expense(db: Session, expense_id: int):
+    expense = get_expense(db, expense_id=expense_id)
+    if expense is None:
+        return None
+
+    db.delete(expense)
+    db.commit()
+    return expense

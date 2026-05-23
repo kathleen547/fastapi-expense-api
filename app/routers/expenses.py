@@ -1,0 +1,47 @@
+from fastapi import Depends, APIRouter, HTTPException
+from sqlalchemy.orm import Session
+
+from app import schemas, crud
+from app.database import get_db
+from app.schemas import ExpenseCreate
+
+
+router = APIRouter(prefix="/expenses", tags=["Expenses"])
+
+
+@router.post("/", response_model=schemas.ExpenseResponse)
+def create_expense(expense: ExpenseCreate, db: Session = Depends(get_db)):
+    category = crud.get_category(db, expense.category_id)
+    if category is None:
+        raise HTTPException(status_code=404, detail="Category not found")
+    else:
+        db_expense = crud.create_expense(db=db, expense=expense)
+        return db_expense
+
+
+@router.get("/", response_model=list[schemas.ExpenseResponse])
+def read_expenses(skip: int = 0, limit: int = 10, category_id: int | None = None,
+                  db: Session = Depends(get_db)):
+    expenses = crud.get_expenses(db,
+                                skip=skip,
+                                limit=limit,
+                                category_id=category_id)
+    return expenses
+
+
+@router.get("/{expense_id}", response_model=schemas.ExpenseResponse)
+def read_expense(expense_id: int, db: Session = Depends(get_db)):
+    expense = crud.get_expense(db, expense_id=expense_id)
+    if expense is None:
+        raise HTTPException(status_code=404,
+                            detail="Expense not found")
+    return expense
+
+
+@router.delete("/{expense_id}", response_model=schemas.ExpenseResponse)
+def delete_response(expense_id: int, db: Session = Depends(get_db)):
+    expense = crud.delete_expense(db=db, expense_id=expense_id)
+    if expense is None:
+        raise HTTPException(status_code=404,
+                            detail="Expense not found")
+    return expense
