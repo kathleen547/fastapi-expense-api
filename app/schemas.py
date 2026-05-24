@@ -10,6 +10,10 @@ class CategoryCreate(CategoryBase):
     pass
 
 
+class CategoryUpdate(CategoryBase):
+    pass
+
+
 class CategoryResponse(CategoryBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
@@ -24,6 +28,10 @@ class ExpenseBase(BaseModel):
 
 
 class ExpenseCreate(ExpenseBase):
+    pass
+
+
+class ExpenseUpdate(ExpenseBase):
     pass
 
 

@@ -1,6 +1,6 @@
 from sqlalchemy.sql import func
 from sqlalchemy import Column, Integer, String, Float, Date, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, validates
 
 from app.database import Base
 
@@ -26,3 +26,8 @@ class Expense(Base):
     notes = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), default=func.now())
 
+    @validates("amount")
+    def validate_amount(self, key, amount):
+        if amount <= 0:
+            raise ValueError(f"Amount must be greater than 0")
+        return amount

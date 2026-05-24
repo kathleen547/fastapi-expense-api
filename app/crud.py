@@ -35,6 +35,20 @@ def create_category(db: Session, category: schemas.CategoryCreate):
     return db_category
 
 
+def update_category(db: Session, category_id : int, category: schemas.CategoryUpdate):
+    db_category = db.query(models.Category).filter(category_id == models.Category.id).first()
+    if db_category is None:
+        return None
+
+    db_category.name = category.name
+    db_category.description = category.description
+
+    db.commit()
+    db.refresh(db_category)
+
+    return db_category
+
+
 def delete_category(db: Session, category_id: int):
     category = get_category(db, category_id=category_id)
     if category is None:
@@ -70,6 +84,26 @@ def get_expenses(db: Session, skip: int = 0, limit: int = 10,
 def get_expense(db: Session, expense_id: int):
     return db.query(models.Expense).filter(expense_id == models.Expense.id).first()
 
+
+def get_expenses_by_category_id(db: Session, category_id: int):
+    return db.query(models.Expense).filter(category_id == models.Expense.category_id).all()
+
+
+def update_expense(db: Session, expense_id : int, expense: schemas.ExpenseUpdate):
+    db_expense = db.query(models.Expense).filter(expense_id == models.Expense.id).first()
+    if db_expense is None:
+        return None
+
+    db_expense.title = expense.title
+    db_expense.amount = expense.amount
+    db_expense.date = expense.date
+    db_expense.category_id = expense.category_id
+    db_expense.notes = expense.notes
+
+    db.commit()
+    db.refresh(db_expense)
+
+    return db_expense
 
 def delete_expense(db: Session, expense_id: int):
     expense = get_expense(db, expense_id=expense_id)

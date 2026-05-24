@@ -38,6 +38,19 @@ def read_expense(expense_id: int, db: Session = Depends(get_db)):
     return expense
 
 
+@router.put("/{expense_id}", response_model=schemas.ExpenseResponse)
+def update_expense(expense_id: int, expense: schemas.ExpenseUpdate, db: Session = Depends(get_db)):
+    updated_expense = crud.update_expense(db, expense_id, expense)
+
+    if updated_expense is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Expense not found"
+        )
+
+    return updated_expense
+
+
 @router.delete("/{expense_id}", response_model=schemas.ExpenseResponse)
 def delete_response(expense_id: int, db: Session = Depends(get_db)):
     expense = crud.delete_expense(db=db, expense_id=expense_id)
