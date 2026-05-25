@@ -5,6 +5,13 @@ from sqlalchemy.orm import relationship, validates
 from app.database import Base
 
 class Category(Base):
+    """
+    Represents a category for organizing user expenses
+    Inherits from Base to define SQLAlchemy model
+
+    Relationship:
+    expenses: one-to-many relationship with Expense.
+    """
     __tablename__= "category"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -15,6 +22,13 @@ class Category(Base):
 
 
 class Expense(Base):
+    """
+    Represents a single expense
+    Inherits from Base to define SQLAlchemy model
+
+    Relationships:
+    category: many-to-one relationship with Category.
+    """
     __tablename__= "expense"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -29,5 +43,5 @@ class Expense(Base):
     @validates("amount")
     def validate_amount(self, key, amount):
         if amount <= 0:
-            raise ValueError(f"Amount must be greater than 0")
+            raise ValueError("Amount must be greater than 0")
         return amount

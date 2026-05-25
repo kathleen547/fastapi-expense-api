@@ -8,12 +8,7 @@ from app.database import get_db
 router = APIRouter(prefix="/categories", tags=["Categories"])
 
 
-@router.get("/test")
-async def root():
-    return {"message": "API test ended successfully"}
-
-
-@router.post("/", response_model=schemas.CategoryResponse, status_code=201)
+@router.post("/", response_model=schemas.CategoryResponse, status_code=201, summary="Create a new category")
 def create_category(category : schemas.CategoryCreate, db: Session = Depends(get_db)):
     db_category = crud.create_category(db=db, category=category)
     if db_category is None:
@@ -24,7 +19,7 @@ def create_category(category : schemas.CategoryCreate, db: Session = Depends(get
     return db_category
 
 
-@router.get("/", response_model=list[schemas.CategoryResponse])
+@router.get("/", response_model=list[schemas.CategoryResponse], summary="Get all categories")
 def read_categories(skip: int = 0,
                     limit: int = 10,
                     name: str | None = None,
@@ -36,7 +31,7 @@ def read_categories(skip: int = 0,
     return categories
 
 
-@router.get("/{category_id}", response_model=schemas.CategoryResponse)
+@router.get("/{category_id}", response_model=schemas.CategoryResponse, summary="Get category by ID")
 def read_category(category_id: int,
                   db: Session = Depends(get_db)):
     category = crud.get_category(db, category_id=category_id)
@@ -46,7 +41,7 @@ def read_category(category_id: int,
     return category
 
 
-@router.put("/{category_id}", response_model=schemas.CategoryResponse)
+@router.put("/{category_id}", response_model=schemas.CategoryResponse, summary="Update an existing category")
 def update_category(category_id: int, category: schemas.CategoryUpdate, db: Session = Depends(get_db)):
     updated_category = crud.update_category(db, category_id, category)
 
@@ -60,7 +55,7 @@ def update_category(category_id: int, category: schemas.CategoryUpdate, db: Sess
 
 
 
-@router.delete("/{category_id}", response_model=schemas.CategoryResponse)
+@router.delete("/{category_id}", response_model=schemas.CategoryResponse, summary="Delete a category")
 def delete_category(category_id: int,
                     db: Session = Depends(get_db)):
     expenses = crud.get_expenses_by_category_id(db, category_id=category_id)

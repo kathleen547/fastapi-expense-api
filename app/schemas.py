@@ -1,6 +1,16 @@
 from pydantic import BaseModel, ConfigDict
 import datetime
 
+
+"""
+Pydantic schemas for categories and expenses.
+
+These schemas handle:
+- request validation,
+- data serialization,
+- API response formatting.
+"""
+
 class CategoryBase(BaseModel):
     name: str
     description : str | None = None
