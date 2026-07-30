@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-
+from fastapi import HTTPException
 from app import models, schemas
 
 
@@ -72,7 +72,10 @@ def delete_category(db: Session, category_id: int):
     """
     category = get_category(db, category_id=category_id)
     if category is None:
-        return None
+        raise HTTPException(
+            status_code=404,
+            detail="Category not found"
+        )
 
     db.delete(category)
     db.commit()
