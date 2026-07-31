@@ -1,5 +1,6 @@
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
+from fastapi import status
 
 from app import schemas, crud
 from app.database import get_db
@@ -9,7 +10,7 @@ from app.schemas import ExpenseCreate
 router = APIRouter(prefix="/expenses", tags=["Expenses"])
 
 
-@router.post("/", response_model=schemas.ExpenseResponse, summary="Create a new expense")
+@router.post("/", response_model=schemas.ExpenseResponse, summary="Create a new expense", status_code=status.HTTP_201_CREATED)
 def create_expense(expense: ExpenseCreate, db: Session = Depends(get_db)):
     category = crud.get_category(db, expense.category_id)
     if category is None:

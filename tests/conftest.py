@@ -45,3 +45,40 @@ def client():
         yield test_client
 
     Base.metadata.drop_all(bind=test_engine)
+
+
+@pytest.fixture
+def category_data():
+    return {
+        "name": "Food",
+        "description": "Groceries and restaurants",
+    }
+
+
+@pytest.fixture
+def created_category(client, category_data):
+    response = client.post("/categories/", json=category_data)
+
+    assert response.status_code == 201
+
+    return response.json()
+
+
+@pytest.fixture
+def expense_data(created_category):
+    return {
+        "title": "Pizza",
+        "amount": 35.50,
+        "date": "2026-07-31",
+        "category_id": created_category["id"],
+        "notes": "Dinner",
+    }
+
+
+@pytest.fixture
+def created_expense(client, expense_data):
+    response = client.post("/expenses/", json=expense_data)
+
+    assert response.status_code == 201
+
+    return response.json()
