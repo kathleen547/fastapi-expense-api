@@ -14,6 +14,7 @@ Expense Tracker API is a RESTful backend application built with FastAPI and SQLA
 - SQLAlchemy
 - SQLite
 - Pydantic
+- pytest
 ## Installation
 1. Clone the repository
 ```bash
@@ -73,10 +74,14 @@ POST /expenses/
   "notes": "Dinner with friends"
 }
 
+## Testing
+
+The project includes automated API tests written with **pytest** and **FastAPI TestClient**.
+The test suite verifies CRUD operations, validation logic, and error handling for both **Categories** and **Expenses** endpoints. All tests run against an isolated SQLite test database, ensuring independence and reliable execution.
+
 ## Future improvements
 - Authentication
 - Docker
-- Tests
 
 ## What I learned
 - how to build REST API with FastAPI
@@ -86,3 +91,4 @@ POST /expenses/
 - how to implement CRUD operations
 - how to work with dependency injection in FastAPI
 - how to document APIs with Swagger/OpenAPI
+- how to create tests with pytest

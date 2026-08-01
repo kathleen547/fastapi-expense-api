@@ -6,25 +6,17 @@ def test_get_empty_categories(client):
     assert response.json() == []
 
 
-def test_create_category(client):
+def test_create_category(client, category_data):
     response = client.post(
         "/categories/",
-        json={
-            "name": "Food",
-            "description": "Groceries and restaurants"
-        }
+        json=category_data
     )
 
     assert response.status_code == 201
     assert response.json()["name"] == "Food"
 
 
-def test_create_duplicate_category(client):
-    category_data = {
-        "name": "Food",
-        "description": "Groceries and restaurants"
-    }
-
+def test_create_duplicate_category(client, category_data):
     client.post("/categories/", json=category_data)
 
     response = client.post("/categories/", json=category_data)
@@ -32,28 +24,15 @@ def test_create_duplicate_category(client):
     assert response.status_code == 409
 
 
-def test_get_categories_after_create(client):
-    category_data = {
-        "name": "Food",
-        "description": "Groceries and restaurants"
-    }
-
-    client.post("/categories/", json=category_data)
-
+def test_get_categories_after_create(client, created_category):
     response = client.get("/categories/")
     assert response.status_code == 200
     assert len(response.json()) == 1
     assert response.json()[0]["name"] == "Food"
 
 
-def test_get_existing_category(client):
-    category_data = {
-        "name": "Food",
-        "description": "Groceries and restaurants"
-    }
-
-    create_response = client.post("/categories/", json=category_data)
-    category_id = create_response.json()["id"]
+def test_get_existing_category(client, created_category):
+    category_id = created_category["id"]
 
     response = client.get(f"/categories/{category_id}")
 
@@ -67,14 +46,8 @@ def test_get_non_existing_category(client):
     assert response.status_code == 404
 
 
-def test_update_existing_category(client):
-    category_data = {
-        "name": "Food",
-        "description": "Groceries and restaurants"
-    }
-
-    create_response = client.post("/categories/", json=category_data)
-    category_id = create_response.json()["id"]
+def test_update_existing_category(client, created_category):
+    category_id = created_category["id"]
 
     changed_data = {
         "name": "Pizza",
@@ -101,13 +74,8 @@ def test_update_non_existing_category(client):
     assert response.status_code == 404
 
 
-def test_delete_existing_category(client):
-    category_data = {
-        "name": "Food",
-        "description": "Groceries and restaurants"
-    }
-    create_response = client.post("/categories/", json=category_data)
-    category_id = create_response.json()["id"]
+def test_delete_existing_category(client, created_category):
+    category_id = created_category["id"]
     response = client.delete(f"/categories/{category_id}")
 
     assert response.status_code == 200
