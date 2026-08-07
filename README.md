@@ -76,8 +76,17 @@ POST /expenses/
 
 ## Testing
 
-The project includes automated API tests written with **pytest** and **FastAPI TestClient**.
-The test suite verifies CRUD operations, validation logic, and error handling for both **Categories** and **Expenses** endpoints. All tests run against an isolated SQLite test database, ensuring independence and reliable execution.
+The project includes both manual and automated API testing.
+
+### Manual API Testing
+- API endpoints were tested using Postman and FastAPI Swagger UI.
+- A Postman collection covering CRUD operations for both Categories and Expenses is included in the repository.
+
+### Automated API Testing
+- Automated API tests were implemented using pytest and FastAPI TestClient.
+- The test suite verifies CRUD operations, validation logic, and error handling for both Categories and Expenses endpoints.
+- All tests run against an isolated SQLite test database, ensuring reliable and independent execution.
+
 
 ## Future improvements
 - Authentication
@@ -91,4 +100,5 @@ The test suite verifies CRUD operations, validation logic, and error handling fo
 - how to implement CRUD operations
 - how to work with dependency injection in FastAPI
 - how to document APIs with Swagger/OpenAPI
-- how to create tests with pytest
+- how to implement automated API tests with pytest and FastAPI TestClient.
+- how to perform manual API testing using Postman and Swagger UI.
